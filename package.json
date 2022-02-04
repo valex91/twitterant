@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.10",
+    "@types/luxon": "^2.0.9",
     "@types/node": "10.17.27",
     "aws-cdk": "2.10.0",
     "jest": "^26.4.2",
@@ -23,6 +24,7 @@
     "aws-cdk-lib": "2.10.0",
     "constructs": "^10.0.0",
     "dotenv": "^16.0.0",
+    "luxon": "^2.3.0",
     "source-map-support": "^0.5.16",
     "twitter-api-v2": "^1.10.0"
   }
