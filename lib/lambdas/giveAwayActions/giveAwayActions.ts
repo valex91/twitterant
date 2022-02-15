@@ -1,3 +1,4 @@
+import { replyGenerator } from './replyGenerator';
 import { TwitterApi, UsersV2Result } from "twitter-api-v2";
 import { RelevantTweetInfo } from "../seeker/tweetExplorer";
 
@@ -13,5 +14,5 @@ export const giveAwayActions = async (tweetInfo: RelevantTweetInfo, client: Twit
     
 
     await client.v2.retweet(myId, tweetInfo.id)
-    await client.v2.reply('generateRandomPayload', tweetInfo.id)
+    await client.v2.reply(replyGenerator(), tweetInfo.id)
 }

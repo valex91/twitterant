@@ -1,15 +1,18 @@
 import { Construct } from 'constructs';
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs"
-import { join } from "path"
 import { Duration } from 'aws-cdk-lib';
 
+type ScaffoldingProps = {
+    entry: string,
+    handler: string,
+}
 export class LambdaScaffoldingGen extends NodejsFunction {
-    constructor(parent: Construct, id: string, handlerName: string, env = {}) {
+    constructor(parent: Construct, id: string, props: ScaffoldingProps, env: Record<string, string>) {
         super(parent,id, {
-            entry: join(__dirname, './handler.ts'),
-            handler: handlerName,
+            entry: props.entry,
+            handler: props.handler,
             environment: env,
-            timeout: Duration.minutes(1)
+            timeout: Duration.minutes(2)
         })
     }
 }

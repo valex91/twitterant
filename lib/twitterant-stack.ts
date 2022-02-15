@@ -6,6 +6,7 @@ import { GiveAwayActionsFunction } from './lambdas/giveAwayActions';
 import { LambdaInvoke, } from 'aws-cdk-lib/aws-stepfunctions-tasks';
 import { Rule, Schedule } from 'aws-cdk-lib/aws-events';
 import { SfnStateMachine } from 'aws-cdk-lib/aws-events-targets';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 
 export class TwitterantStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -15,8 +16,16 @@ export class TwitterantStack extends Stack {
       maxConcurrency: 1
     });
 
-    const seeker = new SeekerFunction(this)
-    const giveAwayActions = new GiveAwayActionsFunction(this)
+    const env = {
+      TWITTER_API_KEY: StringParameter.fromStringParameterName(this, 'consumerKey', '/twitterant/consumer/key').stringValue,
+      TWITTER_API_KEY_SECRET: StringParameter.fromStringParameterName(this, 'consumerSecret', '/twitterant/consumer/secret').stringValue,
+      ACCESS_TOKEN: StringParameter.fromStringParameterName(this, 'accessToken', '/twitterant/access/token').stringValue,
+      ACCESS_SECRET: StringParameter.fromStringParameterName(this, 'accessSecret', '/twitterant/access/secret').stringValue,
+      USER_ID: StringParameter.fromStringParameterName(this, 'userIdParam', '/twitterant/user/id').stringValue
+    }
+
+    const seeker = new SeekerFunction(this, env)
+    const giveAwayActions = new GiveAwayActionsFunction(this, env)
 
     const seekerTask = new LambdaInvoke(this, 'seekerTask', { lambdaFunction: seeker })
 

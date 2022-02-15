@@ -4,7 +4,6 @@ import { giveAwayActions } from "./giveAwayActions";
 
 export const giveAwayAction = async(state: TweetBatch) => {
     const twittClient = await twitterClientGenerator()
-    const me = await twittClient.v2.me()
 
-    await Promise.allSettled(state.batch.map((rtwt) => giveAwayActions(rtwt, twittClient, me.data.id)))
+    await Promise.allSettled(state.batch.map((rtwt) => giveAwayActions(rtwt, twittClient, process.env.USER_ID!)))
 }
