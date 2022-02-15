@@ -1,13 +1,14 @@
-import 'dotenv/config'
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 import { Construct } from 'constructs';
+import { join } from "path"
 
 import { LambdaScaffoldingGen } from "../../utils/lambdaScaffholding"
 
 export class GiveAwayActionsFunction extends LambdaScaffoldingGen {
-    constructor(parent: Construct) {
-        super(parent, 'GiveawayActions', 'giveAwayAction', {
-            TWITTER_API_KEY: process.env.TWITTER_API_KEY, 
-            TWITTER_API_KEY_SECRET: process.env.TWITTER_API_KEY_SECRET
-        })
+    constructor(parent: Construct, env: Record<string, string>) {
+        super(parent, 'GiveawayActions', {
+            entry: join(__dirname, './handler.ts'),
+            handler: 'giveAwayAction',
+        }, env)
     }
 }
