@@ -11,7 +11,7 @@ export const seeker = async () => {
 
     try {
         const relevantTweetDataBatches: TweetBatch[] = [{actionsInBatch:0, batch:[]}]
-        const results = await twittClient.v2.search('valorant giveaway', {start_time: previousExecution});
+        const results = await twittClient.v2.search('valorant giveaway', {start_time: previousExecution, 'tweet.fields': ['author_id'],});
 
         for await(const tweet of results) {
             const currentBatch = relevantTweetDataBatches[relevantTweetDataBatches.length -1]
