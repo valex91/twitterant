@@ -13,7 +13,8 @@ export class TwitterantStack extends Stack {
     super(scope, id, props);
 
     const map = new Map(this, 'Map State', {
-      maxConcurrency: 1
+      maxConcurrency: 1,
+      itemsPath: '$.Payload'
     });
 
     const env = {

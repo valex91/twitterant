@@ -10,8 +10,8 @@ export type RelevantTweetInfo = {
 
 export const tweetExplorer = (tweet: TweetV2): RelevantTweetInfo => {
     const { id, text, author_id } = tweet
-    const toFollow = text.match(USERS_REGEX)?.map(u => u.trim().replace('@', ''))
-
+    const totalToFollow = text.match(USERS_REGEX)?.map(u => u.trim().replace('@', ''))
+    const toFollow = [...new Set(totalToFollow)]
     return {
         id,
         author: author_id,

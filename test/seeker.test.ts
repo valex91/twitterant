@@ -6,7 +6,7 @@ import { twitterClientGenerator } from "../lib/utils/twitterClientGenerator"
 jest.mock('../lib/utils/twitterClientGenerator')
 const twitterGeneratorMock = twitterClientGenerator as jest.Mock
 
-const generateFkTweetsWithActions = (length: number) => Array.from({length}, (_, id) => ({id, author_id: 'authID' ,text: 'twitterText @valex91 @str_nge @us3r'}) )
+const generateFkTweetsWithActions = (length: number) => Array.from({length}, (_, id) => ({id, author_id: 'authID' ,text: 'twitterText @valex91 @str_nge @us3r @us3r'}) )
 
 describe('seeker', () => {
    describe('when there is less than 45 action points', () => {
