@@ -1,3 +1,4 @@
+import { hasAlreadyBeenSeen, setSeenForThisExecution } from './executionCache';
 import { DateTime } from "luxon";
 import { twitterClientGenerator } from "../../utils/twitterClientGenerator";
 import { RelevantTweetInfo, tweetExplorer } from "./tweetExplorer";
@@ -11,17 +12,20 @@ export const seeker = async () => {
 
     try {
         const relevantTweetDataBatches: TweetBatch[] = [{actionsInBatch:0, batch:[]}]
-        const results = await twittClient.v2.search('valorant giveaway', {start_time: previousExecution, 'tweet.fields': ['author_id'],});
+        const results = await twittClient.v2.search('valorant giveaway -is:retweet', {start_time: previousExecution, 'tweet.fields': ['author_id'],});
 
         for await(const tweet of results) {
             const currentBatch = relevantTweetDataBatches[relevantTweetDataBatches.length -1]
             const analysedTweet = tweetExplorer(tweet)
 
-            if((currentBatch.actionsInBatch + analysedTweet.actionImpact) > 45) {
-                relevantTweetDataBatches.push({actionsInBatch: analysedTweet.actionImpact, batch:[analysedTweet]})
-            } else {
-                currentBatch.actionsInBatch = currentBatch.actionsInBatch + analysedTweet.actionImpact
-                currentBatch.batch.push(analysedTweet)
+            if(!hasAlreadyBeenSeen(analysedTweet.id)) {
+                if((currentBatch.actionsInBatch + analysedTweet.actionImpact) > 45) {
+                    relevantTweetDataBatches.push({actionsInBatch: analysedTweet.actionImpact, batch:[analysedTweet]})
+                } else {
+                    currentBatch.actionsInBatch = currentBatch.actionsInBatch + analysedTweet.actionImpact
+                    currentBatch.batch.push(analysedTweet)
+                }
+                setSeenForThisExecution(analysedTweet.id)
             }
         }
 

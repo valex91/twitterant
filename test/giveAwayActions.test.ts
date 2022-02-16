@@ -30,7 +30,7 @@ describe('giveAwayActions', () => {
             expect(clientMock.v2.follow).nthCalledWith(2,'myID', '69')
             expect(clientMock.v2.follow).nthCalledWith(3,'myID', '420')
             expect(clientMock.v2.retweet).toHaveBeenCalledWith('myID', '1337')
-            expect(clientMock.v2.reply).toHaveBeenCalledWith('check this out bois @valesteve91 @ValorantVale', '1337')
+            expect(clientMock.v2.reply).toHaveBeenCalledWith(expect.stringContaining('@valesteve91 @ValorantVale'), '1337')
             expect(clientMock.v2.like).toHaveBeenCalledWith('myID', '1337')
         })
     })
