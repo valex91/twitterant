@@ -10,7 +10,7 @@ const twitterGeneratorMock = twitterClientGenerator as jest.Mock
 const generateFkTweetsWithActions = (length: number) => Array.from({ length }, (_, id) => ({ id, author_id: 'authID', text: 'twitterText @valex91 @str_nge @us3r @us3r' }))
 
 describe('seeker', () => {
-  describe('when there is less than 45 action points', () => {
+  describe('when there is less than 15 action points', () => {
     beforeEach(() => {
       twitterGeneratorMock.mockReturnValue({
         v2: {
@@ -22,8 +22,9 @@ describe('seeker', () => {
 
     it('should query the client with the correct query', async () => {
       await expect(seeker()).resolves.toEqual([
+
         {
-          "actionsInBatch": 20,
+          "actionsInBatch": 12,
           "batch": [
             {
               "actionImpact": 4,
@@ -55,6 +56,11 @@ describe('seeker', () => {
                 "us3r",
               ],
             },
+          ],
+        },
+        {
+          "actionsInBatch": 8,
+          "batch": [
             {
               "actionImpact": 4,
               "author": "authID",
@@ -81,7 +87,7 @@ describe('seeker', () => {
     })
   })
 
-  describe('when there is more than 45 action points', () => {
+  describe('when there is more than 15 action points', () => {
     beforeEach(() => {
       twitterGeneratorMock.mockReturnValue({
         v2: {
@@ -93,8 +99,10 @@ describe('seeker', () => {
 
     it('should query the client with the correct query', async () => {
       const seekerResults = await seeker()
-      expect(seekerResults[0]).toEqual({ actionsInBatch: 44, batch: expect.any(Array) })
-      expect(seekerResults[1]).toEqual({ actionsInBatch: 36, batch: expect.any(Array) })
+      expect(seekerResults[0]).toEqual(
+        { "actionsInBatch": 12, "batch": [{ "actionImpact": 4, "author": "authID", "id": 0, "toFollow": ["valex91", "str_nge", "us3r"] }, { "actionImpact": 4, "author": "authID", "id": 1, "toFollow": ["valex91", "str_nge", "us3r"] }, { "actionImpact": 4, "author": "authID", "id": 2, "toFollow": ["valex91", "str_nge", "us3r"] }] }
+      )
+      expect(seekerResults[1]).toEqual({ "actionsInBatch": 12, "batch": [{ "actionImpact": 4, "author": "authID", "id": 3, "toFollow": ["valex91", "str_nge", "us3r"] }, { "actionImpact": 4, "author": "authID", "id": 4, "toFollow": ["valex91", "str_nge", "us3r"] }, { "actionImpact": 4, "author": "authID", "id": 5, "toFollow": ["valex91", "str_nge", "us3r"] }] })
     })
   })
 
@@ -109,63 +117,70 @@ describe('seeker', () => {
     })
 
     it('should ignore em', async () => {
-      await expect(seeker()).resolves.toEqual([
-        {
-          "actionsInBatch": 20,
-          "batch": [
-            {
-              "actionImpact": 4,
-              "author": "authID",
-              "id": 0,
-              "toFollow": [
-                "valex91",
-                "str_nge",
-                "us3r",
-              ],
-            },
-            {
-              "actionImpact": 4,
-              "author": "authID",
-              "id": 1,
-              "toFollow": [
-                "valex91",
-                "str_nge",
-                "us3r",
-              ],
-            },
-            {
-              "actionImpact": 4,
-              "author": "authID",
-              "id": 2,
-              "toFollow": [
-                "valex91",
-                "str_nge",
-                "us3r",
-              ],
-            },
-            {
-              "actionImpact": 4,
-              "author": "authID",
-              "id": 3,
-              "toFollow": [
-                "valex91",
-                "str_nge",
-                "us3r",
-              ],
-            },
-            {
-              "actionImpact": 4,
-              "author": "authID",
-              "id": 4,
-              "toFollow": [
-                "valex91",
-                "str_nge",
-                "us3r",
-              ],
-            },
-          ],
-        },
-      ])
+      await expect(seeker()).resolves.toEqual(
+        [
+          {
+            "actionsInBatch": 12,
+            "batch": [
+              {
+                "actionImpact": 4,
+                "author": "authID",
+                "id": 0,
+                "toFollow": [
+                  "valex91",
+                  "str_nge",
+                  "us3r",
+                ],
+              },
+              {
+                "actionImpact": 4,
+                "author": "authID",
+                "id": 1,
+                "toFollow": [
+                  "valex91",
+                  "str_nge",
+                  "us3r",
+                ],
+              },
+              {
+                "actionImpact": 4,
+                "author": "authID",
+                "id": 2,
+                "toFollow": [
+                  "valex91",
+                  "str_nge",
+                  "us3r",
+                ],
+              },
+            ],
+          },
+          {
+            "actionsInBatch": 8,
+            "batch": [
+              {
+                "actionImpact": 4,
+                "author": "authID",
+                "id": 3,
+                "toFollow": [
+                  "valex91",
+                  "str_nge",
+                  "us3r",
+                ],
+              },
+              {
+                "actionImpact": 4,
+                "author": "authID",
+                "id": 4,
+                "toFollow": [
+                  "valex91",
+                  "str_nge",
+                  "us3r",
+                ],
+              },
+            ],
+          },
+        ]
+      )
     })
   })
 })

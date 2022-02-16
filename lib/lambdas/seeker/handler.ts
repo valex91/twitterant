@@ -19,7 +19,7 @@ export const seeker = async () => {
             const analysedTweet = tweetExplorer(tweet)
 
             if(!hasAlreadyBeenSeen(analysedTweet.id)) {
-                if((currentBatch.actionsInBatch + analysedTweet.actionImpact) > 45) {
+                if((currentBatch.actionsInBatch + analysedTweet.actionImpact) > 15) {
                     relevantTweetDataBatches.push({actionsInBatch: analysedTweet.actionImpact, batch:[analysedTweet]})
                 } else {
                     currentBatch.actionsInBatch = currentBatch.actionsInBatch + analysedTweet.actionImpact
