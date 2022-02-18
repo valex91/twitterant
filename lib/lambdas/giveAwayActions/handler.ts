@@ -13,6 +13,6 @@ export const giveAwayAction = async (state: TweetBatch) => {
     const now = DateTime.now()
 
     return {
-        triggerTime: now.plus({ minutes: randomInInterval(16, 30) }).toISO({ includeOffset: false })
+        triggerTime: now.plus({ minutes: randomInInterval(16, 30) }).set({millisecond: 0}).toUTC().toISO({suppressMilliseconds: true})
     }
 }
