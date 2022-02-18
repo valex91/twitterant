@@ -1,11 +1,18 @@
+import { DateTime } from "luxon";
+import { randomInInterval } from "../../utils/entrophy";
 import { twitterClientGenerator } from "../../utils/twitterClientGenerator";
 import { TweetBatch } from "../seeker/handler";
 import { giveAwayActions } from "./giveAwayActions";
 
-export const giveAwayAction = async(state: TweetBatch) => {
+export const giveAwayAction = async (state: TweetBatch) => {
     const twittClient = await twitterClientGenerator()
 
     const r = await Promise.allSettled(state.batch.map((rtwt) => giveAwayActions(rtwt, twittClient, process.env.USER_ID!)))
 
-    return r
+
+    const now = DateTime.now()
+
+    return {
+        triggerTime: now.plus({ minutes: randomInInterval(16, 30) }).toISO({ includeOffset: false })
+    }
 }
