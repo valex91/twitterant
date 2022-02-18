@@ -33,9 +33,4 @@ export const giveAwayActions = async (tweetInfo: RelevantTweetInfo, client: Twit
 
 
     await Promise.all(gate)
-    const now = DateTime.now()
-
-    return {
-        triggerTime: now.plus({minutes: randomInInterval(16,30)}).toISO({includeOffset: false})
-    }
 }

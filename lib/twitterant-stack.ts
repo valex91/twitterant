@@ -30,19 +30,19 @@ export class TwitterantStack extends Stack {
 
     const seekerTask = new LambdaInvoke(this, 'seekerTask', { lambdaFunction: seeker })
 
-    const giveAwayTask = new LambdaInvoke(this, 'giveAwayTask', { lambdaFunction: giveAwayActions })
-      .next(new Wait(this, 'twitterTimeout',
+    const giveAwayTask =
+      new Wait(this, 'twitterTimeout',
         {
-          time: WaitTime.timestampPath('$.Payload.triggerTime'),
+          time: WaitTime.timestampPath('$.executionTime'),
           comment: 'Twitter api staggering'
         }
-      ))
+      ).next(new LambdaInvoke(this, 'giveAwayTask', { lambdaFunction: giveAwayActions }))
 
     const definition = seekerTask.next(map.iterator(giveAwayTask).next(new Pass(this, 'done')))
 
     const twitterantStateMachine = new StateMachine(this, 'StateMachine', {
       definition,
-    }); 
+    });
 
     const taskTarget = new SfnStateMachine(twitterantStateMachine)
 
