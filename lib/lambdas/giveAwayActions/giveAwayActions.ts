@@ -1,24 +1,41 @@
 import { replyGenerator } from './replyGenerator';
-import { TwitterApi, UsersV2Result } from "twitter-api-v2";
+import { TwitterApi } from "twitter-api-v2";
 import { RelevantTweetInfo } from "../seeker/tweetExplorer";
+import { actionBetween10And20, randomIndex, randomInInterval } from '../../utils/entrophy';
+import { DateTime } from 'luxon';
 
 export const giveAwayActions = async (tweetInfo: RelevantTweetInfo, client: TwitterApi, myId: string) => {
-    let users: UsersV2Result
-    await client.v2.follow(myId,tweetInfo.author!)  
-  
-    if(tweetInfo.toFollow) {
-         users = await client.v2.usersByUsernames(tweetInfo.toFollow);
+    const necessaryActions: Array<() => Promise<unknown>> = [];
+    necessaryActions.push(() => actionBetween10And20(() => client.v2.follow(myId, tweetInfo.author!)))
 
-        await Promise.all(users.data.map(user => user.id).map(toFollow => client.v2.follow(myId, toFollow)))  
+    if (tweetInfo.toFollow) {
+        necessaryActions.push(
+            () => client.v2.usersByUsernames(tweetInfo.toFollow!)
+                .then(
+                    (res) => res.data.map(user => user.id).map(toFollow => actionBetween10And20(() => client.v2.follow(myId, toFollow)))
+                )
+        );
     }
-    
 
-    await Promise.all(
-        [
-            client.v2.retweet(myId, tweetInfo.id),
-            client.v2.like(myId, tweetInfo.id),
-            client.v2.reply(replyGenerator(), tweetInfo.id)
-        ]
 
+
+    necessaryActions.push(
+        () => actionBetween10And20(() => client.v2.retweet(myId, tweetInfo.id)),
+        () => actionBetween10And20(() => client.v2.like(myId, tweetInfo.id)),
+        () => actionBetween10And20(() => client.v2.reply(replyGenerator(), tweetInfo.id))
     )
+
+    const gate: Promise<unknown>[] = []
+
+    while(necessaryActions.length) {
+        gate.push(necessaryActions.splice(randomIndex(necessaryActions),1)[0]())
+    }
+
+
+    await Promise.all(gate)
+    const now = DateTime.now()
+
+    return {
+        triggerTime: now.plus({minutes: randomInInterval(16,30)}).toISO({includeOffset: false})
+    }
 }

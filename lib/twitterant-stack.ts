@@ -33,7 +33,7 @@ export class TwitterantStack extends Stack {
     const giveAwayTask = new LambdaInvoke(this, 'giveAwayTask', { lambdaFunction: giveAwayActions })
       .next(new Wait(this, 'twitterTimeout',
         {
-          time: WaitTime.duration(Duration.seconds(900)),
+          time: WaitTime.timestampPath('$.Payload.triggerTime'),
           comment: 'Twitter api staggering'
         }
       ))
@@ -42,12 +42,12 @@ export class TwitterantStack extends Stack {
 
     const twitterantStateMachine = new StateMachine(this, 'StateMachine', {
       definition,
-    });
+    }); 
 
     const taskTarget = new SfnStateMachine(twitterantStateMachine)
 
-    new Rule(this, 'FetchEvery6Hr', {
-      schedule: Schedule.rate(Duration.hours(6)),
+    new Rule(this, 'FetchEvery8Hr', {
+      schedule: Schedule.rate(Duration.hours(8)),
       targets: [taskTarget],
     });
   }

@@ -17,20 +17,20 @@ const relevantTweetInfo = {
     actionImpact: 6
 }
 
+jest.setTimeout(120000)
 describe('giveAwayActions', () => {
     describe('when there is a tweet with relevant info', () => {
         beforeEach(async() => {
             await giveAwayActions(relevantTweetInfo, clientMock as unknown as TwitterApi, 'myID')
         })
-
         it('should have performed the actions', () => {
             expect(clientMock.v2.follow).toHaveBeenCalledWith('myID', 'author')
             expect(clientMock.v2.usersByUsernames).toHaveBeenCalledWith(["me", "myself", "I"])
-            expect(clientMock.v2.follow).nthCalledWith(1,'myID', 'author')
-            expect(clientMock.v2.follow).nthCalledWith(2,'myID', '69')
-            expect(clientMock.v2.follow).nthCalledWith(3,'myID', '420')
+            expect(clientMock.v2.follow).toHaveBeenCalledWith('myID', 'author')
+            expect(clientMock.v2.follow).toHaveBeenCalledWith('myID', '69')
+            expect(clientMock.v2.follow).toHaveBeenCalledWith('myID', '420')
             expect(clientMock.v2.retweet).toHaveBeenCalledWith('myID', '1337')
-            expect(clientMock.v2.reply).toHaveBeenCalledWith(expect.stringContaining('@valesteve91 @ValorantVale'), '1337')
+            expect(clientMock.v2.reply).toHaveBeenCalledWith(expect.stringMatching(/(.*@ValorantVale.*|.*@valesteve91.*){2}/g), '1337')
             expect(clientMock.v2.like).toHaveBeenCalledWith('myID', '1337')
         })
     })

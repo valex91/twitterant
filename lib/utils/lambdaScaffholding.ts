@@ -12,7 +12,7 @@ export class LambdaScaffoldingGen extends NodejsFunction {
             entry: props.entry,
             handler: props.handler,
             environment: env,
-            timeout: Duration.minutes(2)
+            timeout: Duration.minutes(3)
         })
     }
 }

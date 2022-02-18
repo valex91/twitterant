@@ -1,14 +1,7 @@
-# Welcome to your CDK TypeScript project!
+# TWITTERANT GIVEAWAY SNOOPER
 
-This is a blank project for TypeScript development with CDK.
+# TODO
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
-
-## Useful commands
-
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+- Increase randomness in genrerated tweet ( use different empty characters paddings as well)
+- Increase randomness in sequence of action based on tweet and timings
+- Artificially decrease optimization of rate limiter
